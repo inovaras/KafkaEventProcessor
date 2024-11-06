@@ -1,3 +1,4 @@
+import json
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
@@ -8,6 +9,7 @@ router = APIRouter()
 
 
 class Event(BaseModel):
+    message_type: str
     timestamp: str
     user_id: str
     payload: dict
@@ -22,6 +24,7 @@ def create_event(event: Event):
         producer.send(
             topic='messages',
             value=value,
+            # value=bytes(str(event).encode('utf-8')), # если захотим передавать неструктурированные
             key=b'from-api-kafka-messages',
             )
         producer.flush()
