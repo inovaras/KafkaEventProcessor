@@ -1,6 +1,6 @@
 # Ссылки на репозитории для рецензента:
 [Auth](https://github.com/NankuF/Auth_sprint_1)<br>
-[Интеграция сервиса контента](https://github.com/NankuF/Async_API_sprint_1)<br>
+[Async_API_sprint_1](https://github.com/NankuF/Async_API_sprint_1)<br>
 
 # Как запустить проект:
 
@@ -22,7 +22,7 @@ docker volume create redis-auth
 
 ### 2. Скачать и запустить репозиторий [ugc_sprint_1](https://github.com/NankuF/ugc_sprint_1)<br>
 
-### 3. Скачать и запустить репозиторий [Интеграция сервиса контента](https://github.com/NankuF/Async_API_sprint_1)<br>
+### 3. Скачать и запустить репозиторий [Async_API_sprint_1](https://github.com/NankuF/Async_API_sprint_1)<br>
 
 Запуск проекта подробно описан в [README.md](https://github.com/NankuF/Async_API_sprint_1/blob/main/README.md) соответствующего проекта
 
@@ -57,3 +57,13 @@ docker volume create redis-auth
 ### 8) Отправлять запросы по ручкам в странице<br>
 ### 9) В [интерфейсе для управления Kafka](http://172.18.0.20:8080/ui/clusters/kraft/all-topics/messages/messages?keySerde=String&valueSerde=String&limit=100) проверить messages*<br>
  **не забывать обновлять страницу*
+
+
+# Что поменялось в [Async_API_sprint_1](https://github.com/NankuF/Async_API_sprint_1)
+
+1. Добавили KAFKA PRODUCER в middleware для отслеживания действий всех пользователей.
+   + middleware отправляет сообщения в Kafka с информацией о каждом запросе, независимо от прав пользователя.
+   + После формирования Kafka-сообщения middleware создает HTTP-запрос для отправки данных на сервис Kafka. Если статус ответа больше или равен 400, вызывается ошибка HTTPException.
+
+2. Добавили KAFKA PRODUCER в check_permission, отслеживания действий и анализа поведения авторизованных пользователей.
+   + Функция kafka_producer вызывается после получения ответа от запроса на проверку прав пользователя (response). Она передает в Kafka дополнительные данные о пользователе (user_id, полученный в resp).
